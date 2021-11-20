@@ -125,8 +125,7 @@ vector<int> znajdz_najkrotsza_trase() {
 
     queue<int> que;
     que.push(1);
-    vector<bool> visited;
-    visited.resize(n + 1);
+    bool visited[n + 1];
     visited[1] = true;
     vector<int> poprz;
     poprz.resize(n + 1);
