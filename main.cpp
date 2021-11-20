@@ -12,6 +12,7 @@ vector<vector<int>> drogi;
 set<int> zw;
 vector<int> energie;
 list<int> miejsca_ladowania;
+vector<int> trasa;
 int poj, koszt, l_zw, n, l_drog, dlg_trasy;
 /*
  * musimy:
@@ -47,7 +48,7 @@ bool czy_poprawna_energia(int energia) {
 
 }
 */
-int lala(const vector<int> &trasa) {
+int lala() {
 
   vector<vector<pair<int, bool>>> energ_na_skrz;
   energ_na_skrz.resize(n + 1);
@@ -140,26 +141,26 @@ vector<int> znajdz_najkrotsza_trase() {
     return poprz;
 }
 
-vector<int> odbuduj_trase(vector<int> poprz) {
+void odbuduj_trase(vector<int> poprz) {
 
-    vector<int> trasa;
     for (int skrz = n; skrz != 0; skrz = poprz[skrz])
         trasa.push_back(skrz);
 
     reverse(trasa.begin(), trasa.end());
 
-    if (trasa[0] != 1) {
+    if (trasa.empty())
+        trasa = {-1};
+    else if (trasa[0] != 1) {
         trasa.clear();
         trasa = {-1};
     }
-    return trasa;
 }
 
-vector<int> bfs() {
+void bfs() {
 
-    vector<int> poprz = znajdz_najkrotsza_trase();
+    //vector<int> poprz = znajdz_najkrotsza_trase();
 
-    return odbuduj_trase(poprz);
+    odbuduj_trase(znajdz_najkrotsza_trase());
 }
 
 int main() {
@@ -193,10 +194,10 @@ int main() {
     for (int i = 0; i < n; i++)
         cin >> energie[i];
 
-    vector<int> trasa = bfs();
+    bfs();
     // jezeli nie da sie dotrzec
     if (trasa[0] == -1) {
-        cout << -1;
+        cout << -1 << "nie znaleziono najkrotszej sciezki";
     return 0;
     }
     dlg_trasy = static_cast<int>(trasa.size());
@@ -218,7 +219,7 @@ int main() {
     cout << '\n';
     */
     // wyjscie
-    int max_energ = lala(trasa);
+    int max_energ = lala();
     if (max_energ == -1) {
         cout << max_energ;
     } else {
