@@ -157,12 +157,8 @@ void odbuduj_trase(vector<int> poprz) {
 
     reverse(trasa.begin(), trasa.end());
 
-    if (trasa.empty())
+    if (trasa.empty() || trasa[0] != 1)
         trasa = {-1};
-    else if (trasa[0] != 1) {
-        trasa.clear();
-        trasa = {-1};
-    }
 }
 
 void bfs() {
