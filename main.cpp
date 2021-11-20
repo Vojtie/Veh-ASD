@@ -150,24 +150,26 @@ vector<int> znajdz_najkrotsza_trase() {
     return poprz;
 }
 
-bool odbuduj_trase(vector<int> poprz) {
+void odbuduj_trase(vector<int> poprz) {
 
     for (int skrz = n; skrz != 0; skrz = poprz[skrz])
         trasa.push_back(skrz);
 
     reverse(trasa.begin(), trasa.end());
 
-    if (trasa.empty() || trasa[0] != 1)
-        return false;
-
-    return true;
+    if (trasa.empty())
+        trasa = {-1};
+    else if (trasa[0] != 1) {
+        trasa.clear();
+        trasa = {-2};
+    }
 }
 
-bool bfs() {
+void bfs() {
 
     //vector<int> poprz = znajdz_najkrotsza_trase();
 
-    return odbuduj_trase(znajdz_najkrotsza_trase());
+    odbuduj_trase(znajdz_najkrotsza_trase());
 }
 
 int main() {
@@ -201,8 +203,11 @@ int main() {
     for (int i = 0; i < n; i++)
         cin >> energie[i];
 
-    if (!bfs())
-        cout << "wtf";
+    bfs();
+    if (trasa[0] == -1)
+        cout << "trasa pusta\n";
+    else if (trasa[0] == -2)
+        cout << "nie dotarto do konca\n";
     else {
         /*
         // jezeli nie da sie dotrzec
