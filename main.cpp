@@ -150,7 +150,7 @@ vector<int> znajdz_najkrotsza_trase() {
     return poprz;
 }
 
-void odbuduj_trase(vector<int> poprz) {
+bool odbuduj_trase(vector<int> poprz) {
 
     for (int skrz = n; skrz != 0; skrz = poprz[skrz])
         trasa.push_back(skrz);
@@ -158,14 +158,16 @@ void odbuduj_trase(vector<int> poprz) {
     reverse(trasa.begin(), trasa.end());
 
     if (trasa.empty() || trasa[0] != 1)
-        trasa = {-1};
+        return false;
+
+    return true;
 }
 
-void bfs() {
+bool bfs() {
 
     //vector<int> poprz = znajdz_najkrotsza_trase();
 
-    odbuduj_trase(znajdz_najkrotsza_trase());
+    return odbuduj_trase(znajdz_najkrotsza_trase());
 }
 
 int main() {
@@ -199,52 +201,57 @@ int main() {
     for (int i = 0; i < n; i++)
         cin >> energie[i];
 
-    bfs();
-    // jezeli nie da sie dotrzec
-    if (trasa[0] == -1) {
-        cout << -1 << "nie znaleziono najkrotszej sciezki";
-    return 0;
-    }
-    dlg_trasy = static_cast<int>(trasa.size());
-    /*
-    for (auto skrz : trasa)
-        cout << skrz;
-
-    cout << '\n';
-
-    int max_energ = lala(trasa);
-
-    cout << "max energ: " << max_energ << '\n';
-
-    cout << "miejsca ladowania: ";
-
-    for (auto i : miejsca_ladowania)
-        cout << i << ' ';
-
-    cout << '\n';
-    */
-    // wyjscie
-    int max_energ = lala();
-    if (max_energ == -1) {
-        cout << max_energ;
-    } else {
-        cout << dlg_trasy << ' ' << max_energ << ' ' << miejsca_ladowania.size() << '\n';
-
-        for (int i = 0; i < dlg_trasy - 1; i++) {
-            cout << trasa[i] << ' ';
+    if (!bfs())
+        cout << "wtf";
+    else {
+        /*
+        // jezeli nie da sie dotrzec
+        if (trasa[0] == -1) {
+            cout << -1 << "nie znaleziono najkrotszej sciezki";
+            return 0;
         }
-        cout << trasa[dlg_trasy - 1] << '\n';
-        if (miejsca_ladowania.size() > 1) {
-            for (int i: miejsca_ladowania) {
-                cout << i;
-                miejsca_ladowania.pop_front();
-                if (!miejsca_ladowania.empty())
-                    cout << ' ';
-                else
-                    cout << '\n';
+         */
+        dlg_trasy = static_cast<int>(trasa.size());
+        /*
+        for (auto skrz : trasa)
+            cout << skrz;
+
+        cout << '\n';
+
+        int max_energ = lala(trasa);
+
+        cout << "max energ: " << max_energ << '\n';
+
+        cout << "miejsca ladowania: ";
+
+        for (auto i : miejsca_ladowania)
+            cout << i << ' ';
+
+        cout << '\n';
+        */
+        // wyjscie
+        int max_energ = lala();
+        if (max_energ == -1) {
+            cout << max_energ;
+        } else {
+            cout << dlg_trasy << ' ' << max_energ << ' ' << miejsca_ladowania.size() << '\n';
+
+            for (int i = 0; i < dlg_trasy - 1; i++) {
+                cout << trasa[i] << ' ';
             }
-        } else
-            cout << '\n';
+            cout << trasa[dlg_trasy - 1] << '\n';
+            if (miejsca_ladowania.size() > 1) {
+                for (int i: miejsca_ladowania) {
+                    cout << i;
+                    miejsca_ladowania.pop_front();
+                    if (!miejsca_ladowania.empty())
+                        cout << ' ';
+                    else
+                        cout << '\n';
+                }
+            } else
+                cout << '\n';
+        }
     }
     return 0;
 }
