@@ -20,6 +20,13 @@ int poj, koszt, l_zw, n, l_drog, dlg_trasy;
  * - ile energii mamy na koncu
  */
 
+void print_vector(const vector<int> &vec) {
+    cout << "printing vector:" << '\n';
+    for (int i : vec)
+        cout << i << ' ';
+    cout << '\n';
+}
+
 
 bool czy_poprawna_energia(int energia) {
     return energia > 0 && energia <= poj && zw.count(energia) == 0;
@@ -107,7 +114,7 @@ int lala() {
               }
               akt_energ += koszt;
           }
-          //assert(akt_energ == poj);
+          assert(akt_energ == poj);
           return max_energ;
           }
       }
@@ -118,7 +125,8 @@ vector<int> znajdz_najkrotsza_trase() {
 
     queue<int> que;
     que.push(1);
-    bool visited[n + 1];
+    vector<bool> visited;
+    visited.resize(n + 1);
     visited[1] = true;
     vector<int> poprz;
     poprz.resize(n + 1);
@@ -138,6 +146,7 @@ vector<int> znajdz_najkrotsza_trase() {
             }
         }
     }
+    print_vector(poprz);
     return poprz;
 }
 
