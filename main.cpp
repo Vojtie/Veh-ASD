@@ -240,7 +240,7 @@ int main() {
         cout << '\n';
         */
         // wyjscie
-        /*
+
         int max_energ = lala();
         if (max_energ == -1) {
             cout << max_energ;
@@ -265,6 +265,4 @@ int main() {
         }
     }
     return 0;
-*/
-    }
 }
