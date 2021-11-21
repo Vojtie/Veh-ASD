@@ -208,11 +208,12 @@ int main() {
     cout << "essunia zaraz bfsik lecimy\n";
 
     bfs();
-    /*
+
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
     else if (trasa[0] == -2)
         cout << "nie dotarto do konca\n";
+    /*
     else {
         /*
         // jezeli nie da sie dotrzec
