@@ -206,6 +206,7 @@ int main() {
     for (int i = 0; i < n; i++)
         cin >> energie[i];
     cout << "essunia zaraz bfsik lecimy\n";
+    /*
     bfs();
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
@@ -219,6 +220,7 @@ int main() {
             return 0;
         }
          */
+    /*
         dlg_trasy = static_cast<int>(trasa.size());
         /*
         for (auto skrz : trasa)
@@ -238,6 +240,7 @@ int main() {
         cout << '\n';
         */
         // wyjscie
+        /*
         int max_energ = lala();
         if (max_energ == -1) {
             cout << max_energ;
@@ -262,4 +265,5 @@ int main() {
         }
     }
     return 0;
+*/
 }
