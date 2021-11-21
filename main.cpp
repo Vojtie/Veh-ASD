@@ -19,14 +19,14 @@ int poj, koszt, l_zw, n, l_drog, dlg_trasy;
  * - wiedziec na jakich stacjach ladujemy
  * - ile energii mamy na koncu
  */
-
+/*
 void print_vector(const vector<int> &vec) {
     cout << "printing vector:" << '\n';
     for (int i : vec)
         cout << i << ' ';
     cout << '\n';
 }
-
+*/
 
 bool czy_poprawna_energia(int energia) {
     return energia > 0 && energia <= poj && zw.count(energia) == 0;
@@ -129,27 +129,27 @@ vector<int> znajdz_najkrotsza_trase() {
     visited[1] = 1;
     vector<int> poprz;
     poprz.resize(n + 1);
-    cout << "que empty:" << que.empty() << '\n';
+    //cout << "que empty:" << que.empty() << '\n';
     while (!que.empty()) {
-        cout << "jestem w petli bfsa\n";
+        //cout << "jestem w petli bfsa\n";
         auto skrz = que.front();
-        cout << skrz << '\n';
+        //cout << skrz << '\n';
         que.pop();
 
         if (skrz == n)
             break;
 
         for (auto sasiad : drogi[skrz]) {
-            cout << sasiad << '\n';
+            //cout << sasiad << '\n';
             if (visited[sasiad] == 0) {
-                cout << "nieodwiedzony sasiad " << sasiad << '\n';
+                //cout << "nieodwiedzony sasiad " << sasiad << '\n';
                 que.push(sasiad);
                 visited[sasiad] = 1;
                 poprz[sasiad] = skrz;
             }
         }
     }
-    print_vector(poprz);
+    //print_vector(poprz);
     return poprz;
 }
 
@@ -205,18 +205,19 @@ int main() {
 
     for (int i = 0; i < n; i++)
         cin >> energie[i];
-    cout << "essunia zaraz bfsik lecimy\n";
+    //cout << "essunia zaraz bfsik lecimy\n";
 
     bfs();
-
+/*
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
     else if (trasa[0] == -2)
         cout << "nie dotarto do konca\n";
     else {
+    */
         // jezeli nie da sie dotrzec
         if (trasa[0] == -1) {
-            cout << -1 << "nie znaleziono najkrotszej sciezki";
+            cout << -1 << '\n';
             return 0;
         }
 
@@ -240,7 +241,7 @@ int main() {
         cout << '\n';
         */
         // wyjscie
-        print_vector(trasa);
+        //print_vector(trasa);
         int max_energ = lala();
 
         if (max_energ == -1) {
@@ -257,6 +258,6 @@ int main() {
                 cout << skrz << ' ';
             cout << '\n';
         }
-    }
+
     return 0;
 }
