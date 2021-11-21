@@ -242,10 +242,7 @@ int main() {
         // wyjscie
         print_vector(trasa);
         int max_energ = lala();
-        cout << max_energ << '\n';
-        for (auto i : miejsca_ladowania)
-            cout << i << ' ';
-        /*
+
         if (max_energ == -1) {
             cout << max_energ;
         } else {
@@ -255,19 +252,11 @@ int main() {
                 cout << trasa[i] << ' ';
             }
             cout << trasa[dlg_trasy - 1] << '\n';
-            if (miejsca_ladowania.size() > 1) {
-                for (int i: miejsca_ladowania) {
-                    cout << i;
-                    miejsca_ladowania.pop_front();
-                    if (!miejsca_ladowania.empty())
-                        cout << ' ';
-                    else
-                        cout << '\n';
-                }
-            } else
-                cout << '\n';
+
+            for (auto skrz : miejsca_ladowania)
+                cout << skrz << ' ';
+            cout << '\n';
         }
-         */
     }
     return 0;
 }
