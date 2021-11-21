@@ -205,7 +205,7 @@ int main() {
 
     for (int i = 0; i < n; i++)
         cin >> energie[i];
-
+    cout << "essunia zaraz bfsik lecimy\n";
     bfs();
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
