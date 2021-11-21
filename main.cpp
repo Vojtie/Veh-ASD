@@ -242,6 +242,7 @@ int main() {
         // wyjscie
         print_vector(trasa);
         int max_energ = lala();
+        cout << max_energ;
         /*
         if (max_energ == -1) {
             cout << max_energ;
