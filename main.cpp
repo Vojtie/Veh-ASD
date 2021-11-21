@@ -5,14 +5,13 @@
 #include <unordered_set>
 #include <algorithm>
 #include <list>
-#include <cassert>
 
 using namespace std;
 vector<vector<int>> drogi;
 set<int> zw;
 vector<int> energie;
 list<int> miejsca_ladowania;
-vector<int> trasa;
+vector<int> trasa, poprz;
 int poj, koszt, l_zw, n, l_drog, dlg_trasy;
 /*
  * musimy:
@@ -114,67 +113,69 @@ int lala() {
               }
               akt_energ += koszt;
           }
-          assert(akt_energ == poj);
+          //assert(akt_energ == poj);
           return max_energ;
           }
       }
         return poj;
 }
 
-vector<int> znajdz_najkrotsza_trase() {
+bool znajdz_najkrotsza_trase() {
 
     queue<int> que;
     que.push(1);
-    vector<int> visited(n + 1, 0);
-    visited[1] = 1;
-    vector<int> poprz;
-    poprz.resize(n + 1);
-    //cout << "que empty:" << que.empty() << '\n';
+
+    vector<bool> visited(n + 1, false);
+    visited[1] = true;
+
+    poprz.resize(n + 1, 0);
+
     while (!que.empty()) {
-        //cout << "jestem w petli bfsa\n";
+
         auto skrz = que.front();
-        //cout << skrz << '\n';
+
         que.pop();
 
-        if (skrz == n)
-            break;
-
         for (auto sasiad : drogi[skrz]) {
-            //cout << sasiad << '\n';
-            if (visited[sasiad] == 0) {
-                //cout << "nieodwiedzony sasiad " << sasiad << '\n';
-                que.push(sasiad);
-                visited[sasiad] = 1;
+
+            if (!visited[sasiad]) {
+
                 poprz[sasiad] = skrz;
+                if (sasiad == n)
+                    return true;
+                que.push(sasiad);
+                visited[sasiad] = true;
             }
         }
     }
-    //print_vector(poprz);
-    return poprz;
+    return false;
 }
 
-void odbuduj_trase(vector<int> poprz) {
+void odbuduj_trase() {
 
     for (int skrz = n; skrz != 0; skrz = poprz[skrz])
         trasa.push_back(skrz);
-
+    poprz.clear();
     reverse(trasa.begin(), trasa.end());
 
     if (trasa.empty())
         trasa = {-1};
+    else if (trasa[0] != 1)
+        trasa = {-1};
+    /*
     else if (trasa[0] != 1) {
         trasa.clear();
         trasa = {-2};
-    }
+    } */
 }
-
+/*
 void bfs() {
 
     //vector<int> poprz = znajdz_najkrotsza_trase();
-
-    odbuduj_trase(znajdz_najkrotsza_trase());
+    znajdz_najkrotsza_trase();
+    odbuduj_trase();
 }
-
+*/
 int main() {
 
     std::ios_base::sync_with_stdio(false);
@@ -207,7 +208,10 @@ int main() {
         cin >> energie[i];
     //cout << "essunia zaraz bfsik lecimy\n";
 
-    bfs();
+    if (!znajdz_najkrotsza_trase()) {
+        cout << -1 << '\n';
+        return 0;
+    } else {
 /*
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
@@ -215,13 +219,12 @@ int main() {
         cout << "nie dotarto do konca\n";
     else {
     */
+    odbuduj_trase();
         // jezeli nie da sie dotrzec
         if (trasa[0] == -1) {
             cout << -1 << '\n';
             return 0;
         }
-
-
         dlg_trasy = static_cast<int>(trasa.size());
         /*
         for (auto skrz : trasa)
@@ -245,7 +248,7 @@ int main() {
         int max_energ = lala();
 
         if (max_energ == -1) {
-            cout << max_energ;
+            cout << max_energ << '\n';
         } else {
             cout << dlg_trasy << ' ' << max_energ << ' ' << miejsca_ladowania.size() << '\n';
 
@@ -254,10 +257,11 @@ int main() {
             }
             cout << trasa[dlg_trasy - 1] << '\n';
 
-            for (auto skrz : miejsca_ladowania)
+            for (auto skrz: miejsca_ladowania)
                 cout << skrz << ' ';
             cout << '\n';
         }
 
-    return 0;
+        return 0;
+    }
 }
