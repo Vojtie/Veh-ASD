@@ -125,8 +125,8 @@ vector<int> znajdz_najkrotsza_trase() {
 
     queue<int> que;
     que.push(1);
-    vector<bool> visited(n + 1, false);
-    visited[1] = true;
+    vector<int> visited(n + 1, 0);
+    visited[1] = 1;
     vector<int> poprz;
     poprz.resize(n + 1);
     cout << "que empty:" << que.empty() << '\n';
@@ -141,10 +141,10 @@ vector<int> znajdz_najkrotsza_trase() {
 
         for (auto sasiad : drogi[skrz]) {
             cout << sasiad << '\n';
-            if (!visited[sasiad]) {
+            if (visited[sasiad] == 0) {
                 cout << "nieodwiedzony sasiad " << sasiad << '\n';
                 que.push(sasiad);
-                visited[sasiad] = true;
+                visited[sasiad] = 1;
                 poprz[sasiad] = skrz;
             }
         }
