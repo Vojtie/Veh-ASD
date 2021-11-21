@@ -57,34 +57,34 @@ bool czy_poprawna_energia(int energia) {
 int lala() {
 
   vector<vector<pair<int, bool>>> energ_na_skrz;
-  energ_na_skrz.resize(n + 1);
+  energ_na_skrz.resize(dlg_trasy);
   vector<unordered_set<bool>> energie_dodane;
-  energie_dodane.resize(n + 1);
-  energ_na_skrz[1].push_back(make_pair(poj, false));
+  energie_dodane.resize(dlg_trasy);
+  energ_na_skrz[0].push_back(make_pair(poj, false));
 
   if (trasa.size() > 1) {
 
-      for (int i = 2; i < dlg_trasy + 1; ++i) {
-          for (size_t j = 0; j < energ_na_skrz[trasa[i - 2]].size(); ++j) {
-              auto akt_energ = energ_na_skrz[trasa[i - 2]][j].first - koszt;
+      for (int i = 1; i < dlg_trasy; ++i) {
+          for (size_t j = 0; j < energ_na_skrz[i - 1].size(); ++j) {
+              auto akt_energ = energ_na_skrz[i - 1][j].first - koszt;
               if (akt_energ >= 0) {
                   // bez ladowania
                   if (energie_dodane[i].count(akt_energ) == 0)
-                      energ_na_skrz[trasa[i - 1]].push_back(make_pair(akt_energ, false));
+                      energ_na_skrz[i].push_back(make_pair(akt_energ, false));
 
-                  int energ_po_lad = akt_energ + energie[i - 1];
+                  int energ_po_lad = akt_energ + energie[i];
                   if (czy_poprawna_energia(energ_po_lad) && energie_dodane[i].count(energ_po_lad) == 0) {
-                      energ_na_skrz[trasa[i - 1]].push_back(make_pair(energ_po_lad, true));
+                      energ_na_skrz[i].push_back(make_pair(energ_po_lad, true));
                   }
               }
           }
       }
       // szukanie max energii
       int max_energ = -1;
-      size_t i_max;
-      for (size_t i = 0; i < energ_na_skrz[n].size(); ++i) {
-          if (max_energ < energ_na_skrz[n][i].first) {
-              max_energ = energ_na_skrz[n][i].first;
+      size_t i_max, l_koncowych_energ = energ_na_skrz[dlg_trasy - 1].size();
+      for (size_t i = 0; i < l_koncowych_energ; ++i) {
+          if (max_energ < energ_na_skrz[dlg_trasy - 1][i].first) {
+              max_energ = energ_na_skrz[dlg_trasy - 1][i].first;
               i_max = i;
           }
       }
@@ -94,14 +94,14 @@ int lala() {
       } else {
           // odzyskujemy miejsca ladowania
           int akt_energ = max_energ;
-          if (energ_na_skrz[n][i_max].second) { // jesli ladowalismy to dodajemy do miejsc_ladowania
+          if (energ_na_skrz[dlg_trasy - 1][i_max].second) { // jesli ladowalismy to dodajemy do miejsc_ladowania
               miejsca_ladowania.push_front(n);
               akt_energ -= energie[dlg_trasy - 1] - koszt;
           }
           for (int i = dlg_trasy - 2; i > 0; --i) {
               int poprz_skrz = trasa[i];
               pair<int, bool> poprz_lad;
-              for (auto &energ_lad : energ_na_skrz[poprz_skrz]) {
+              for (auto &energ_lad : energ_na_skrz[i]) {
                   if (energ_lad.first == akt_energ) {
                       poprz_lad = energ_lad;
                       break;
@@ -117,7 +117,7 @@ int lala() {
           return max_energ;
           }
       }
-        return poj;
+      return poj;
 }
 
 bool znajdz_najkrotsza_trase() {
