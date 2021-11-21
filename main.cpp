@@ -240,7 +240,7 @@ int main() {
         cout << '\n';
         */
         // wyjscie
-
+        print_vector(trasa);
         int max_energ = lala();
         /*
         if (max_energ == -1) {
