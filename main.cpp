@@ -129,15 +129,18 @@ vector<int> znajdz_najkrotsza_trase() {
     visited[1] = true;
     vector<int> poprz;
     poprz.resize(n + 1);
-
+    cout << "que empty:" << que.empty() << '\n';
     while (!que.empty()) {
+        cout << "jestem w petli bfsa\n";
         auto skrz = que.front();
+        cout << skrz << '\n';
         que.pop();
 
         if (skrz == n)
             break;
 
         for (auto sasiad : drogi[skrz]) {
+            cout << sasiad << '\n';
             if (!visited[sasiad]) {
                 que.push(sasiad);
                 visited[sasiad] = true;
@@ -201,7 +204,7 @@ int main() {
 
     for (int i = 0; i < n; i++)
         cin >> energie[i];
-    print_vector(drogi[1]);
+
     bfs();
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
