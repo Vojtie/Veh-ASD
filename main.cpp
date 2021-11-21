@@ -142,6 +142,7 @@ vector<int> znajdz_najkrotsza_trase() {
         for (auto sasiad : drogi[skrz]) {
             cout << sasiad << '\n';
             if (!visited[sasiad]) {
+                cout << "nieodwiedzony sasiad " << sasiad << '\n';
                 que.push(sasiad);
                 visited[sasiad] = true;
                 poprz[sasiad] = skrz;
