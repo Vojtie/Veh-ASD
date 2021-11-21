@@ -201,7 +201,7 @@ int main() {
 
     for (int i = 0; i < n; i++)
         cin >> energie[i];
-
+    print_vector(drogi[1]);
     bfs();
     if (trasa[0] == -1)
         cout << "trasa pusta\n";
