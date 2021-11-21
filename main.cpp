@@ -213,16 +213,14 @@ int main() {
         cout << "trasa pusta\n";
     else if (trasa[0] == -2)
         cout << "nie dotarto do konca\n";
-    /*
     else {
-        /*
         // jezeli nie da sie dotrzec
         if (trasa[0] == -1) {
             cout << -1 << "nie znaleziono najkrotszej sciezki";
             return 0;
         }
-         */
-    /*
+
+
         dlg_trasy = static_cast<int>(trasa.size());
         /*
         for (auto skrz : trasa)
@@ -268,4 +266,5 @@ int main() {
     }
     return 0;
 */
+    }
 }
