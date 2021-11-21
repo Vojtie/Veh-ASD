@@ -242,7 +242,9 @@ int main() {
         // wyjscie
         print_vector(trasa);
         int max_energ = lala();
-        cout << max_energ;
+        cout << max_energ << '\n';
+        for (auto i : miejsca_ladowania)
+            cout << i << ' ';
         /*
         if (max_energ == -1) {
             cout << max_energ;
