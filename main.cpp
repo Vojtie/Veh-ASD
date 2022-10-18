@@ -1,150 +1,121 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
 #include <queue>
-#include <set>
 #include <unordered_set>
-#include <algorithm>
 #include <list>
 
 using namespace std;
+
 vector<vector<int>> drogi;
-set<int> zw;
-vector<int> energie;
+unordered_set<int> zabronione_wart;
+vector<int> powerbanki;
 list<int> miejsca_ladowania;
-vector<int> trasa, poprz;
-int poj, koszt, l_zw, n, l_drog, dlg_trasy;
-/*
- * musimy:
- * - wiedziec na jakich stacjach ladujemy
- * - ile energii mamy na koncu
- */
-/*
-void print_vector(const vector<int> &vec) {
-    cout << "printing vector:" << '\n';
-    for (int i : vec)
-        cout << i << ' ';
-    cout << '\n';
-}
-*/
+vector<int> trasa, poprzednie_skrzyzowania;
 
-bool czy_poprawna_energia(int energia) {
-    return energia > 0 && energia <= poj && zw.count(energia) == 0;
+int pojemnosc, koszt, l_zw, n, m, dlg_trasy;
+
+bool poprawna_energia(int energia) {
+    return energia > 0 && energia <= pojemnosc && zabronione_wart.count(energia) == 0;
 }
 
-/*energia_lad wyznacz_doladowania(int akt_stan_bater, int odl_od_startu, bitset<1001> ladowania) {
-    int stan_bater_po_lad = akt_stan_bater + energie[odl_od_startu];
-    energia_lad koncowa_energia_lad;
-    if (akt_stan_bater < 0) {
-        // nie dojechalismy
-        return make_pair(-1 , ladowania);
+void znajdz_miejsca_ladowania(int max_energia, int i_max,
+                              const vector<vector<pair<int, bool>>> &energie_mozliwe) {
+    int energia = max_energia;
+    if (energie_mozliwe[dlg_trasy - 1][i_max].second) {
+        miejsca_ladowania.push_front(n);
+        energia -= powerbanki[dlg_trasy - 1];
     }
-    //jesli nie mozna ladowac
-    if (zw.count(stan_bater_po_lad) == 1 || stan_bater_po_lad < koszt || stan_bater_po_lad < 0 || stan_bater_po_lad > poj) {
-        if (odl_od_startu == n) {
-            // dojechalismy z energ > 0
-            return make_pair(akt_stan_bater, ladowania);
-        } else {
-            // jedziemy dalej bez ladowania
-            koncowa_energia_lad = wyznacz_doladowania(akt_stan_bater - koszt, odl_od_startu + 1, ladowania);
+    energia += koszt;
+    // złożonosc czasowa: O(n * p)
+    for (int i = dlg_trasy - 2; i > 0; --i) {
+        auto poprzednie_skrzyzowanie = trasa[i];
+        pair<int, bool> poprzednie_ladowanie;
+
+        for (auto &energia_ladowanie : energie_mozliwe[i]) {
+            if (energia_ladowanie.first == energia) {
+                poprzednie_ladowanie = energia_ladowanie;
+                break;
+            }
         }
-    } else {
-        // jesli mozna ladowac
+        if (poprzednie_ladowanie.second) {
+            energia -= powerbanki[i];
+            miejsca_ladowania.push_front(poprzednie_skrzyzowanie);
+        }
+        energia += koszt;
     }
-
-
 }
-*/
-int lala() {
 
-  vector<vector<pair<int, bool>>> energ_na_skrz;
-  energ_na_skrz.resize(dlg_trasy);
-  vector<unordered_set<bool>> energie_dodane;
-  energie_dodane.resize(dlg_trasy);
-  energ_na_skrz[0].push_back(make_pair(poj, false));
+int znajdz_max_energie() {
 
-  if (trasa.size() > 1) {
+    // dla i-tego skrzyżowania przechowuje informacje o możliwych wartościach
+    // energii baterii i pamięta czy bateria była na tym skrzyżowaniu ładowana
+    vector<vector<pair<int, bool>>> energie_mozliwe(dlg_trasy);
 
-      for (int i = 1; i < dlg_trasy; ++i) {
-          for (size_t j = 0; j < energ_na_skrz[i - 1].size(); ++j) {
-              auto akt_energ = energ_na_skrz[i - 1][j].first - koszt;
-              if (akt_energ >= 0) {
-                  // bez ladowania
-                  if (energie_dodane[i].count(akt_energ) == 0)
-                      energ_na_skrz[i].push_back(make_pair(akt_energ, false));
+    // dla i-tego skrzyzowania przechowuje informacje
+    // czy dana energia baterii była już rozpatrzona
+    vector<vector<bool>> energie_dodane(dlg_trasy);
 
-                  int energ_po_lad = akt_energ + energie[i];
-                  if (czy_poprawna_energia(energ_po_lad) && energie_dodane[i].count(energ_po_lad) == 0) {
-                      energ_na_skrz[i].push_back(make_pair(energ_po_lad, true));
-                  }
-              }
-          }
-      }
-      // szukanie max energii
-      int max_energ = -1;
-      size_t i_max, l_koncowych_energ = energ_na_skrz[dlg_trasy - 1].size();
-      for (size_t i = 0; i < l_koncowych_energ; ++i) {
-          if (max_energ < energ_na_skrz[dlg_trasy - 1][i].first) {
-              max_energ = energ_na_skrz[dlg_trasy - 1][i].first;
-              i_max = i;
-          }
-      }
-      if (max_energ == -1) {
-          // nie dojechalismy
-          return max_energ;
-      } else {
-          // odzyskujemy miejsca ladowania
-          int akt_energ = max_energ;
-          if (energ_na_skrz[dlg_trasy - 1][i_max].second) { // jesli ladowalismy to dodajemy do miejsc_ladowania
-              miejsca_ladowania.push_front(n);
-              akt_energ -= energie[dlg_trasy - 1] - koszt;
-          }
-          for (int i = dlg_trasy - 2; i > 0; --i) {
-              int poprz_skrz = trasa[i];
-              pair<int, bool> poprz_lad;
-              for (auto &energ_lad : energ_na_skrz[i]) {
-                  if (energ_lad.first == akt_energ) {
-                      poprz_lad = energ_lad;
-                      break;
-                  }
-              }
-              if (poprz_lad.second) { // jezeli poprzednio ladowalismy to odejmujemy tyle ile ladowalismy
-                  akt_energ -= energie[i];
-                  miejsca_ladowania.push_front(poprz_skrz);
-              }
-              akt_energ += koszt;
-          }
-          //assert(akt_energ == poj);
-          return max_energ;
-          }
-      }
-      return poj;
+    for (auto &vec : energie_dodane)
+        vec.resize(pojemnosc + 1, false);
+
+    energie_mozliwe[0].push_back(make_pair(pojemnosc, false));
+
+    // wyznaczanie mozliwych wartosci energii baterii na danym skrzyżowaniu trasy
+    // zlozonosc czasowa: O(n * p)
+    for (int i = 1; i < dlg_trasy; ++i) {
+        for (size_t j = 0; j < energie_mozliwe[i - 1].size(); ++j) {
+            auto energia = energie_mozliwe[i - 1][j].first - koszt;
+            if (energia >= 0) {
+                if (!energie_dodane[i][energia]) {
+                    energie_mozliwe[i].push_back(make_pair(energia, false));
+                    energie_dodane[i][energia] = true;
+                }
+                int energia_po_nalad = energia + powerbanki[i];
+                if (poprawna_energia(energia_po_nalad) && !energie_dodane[i][energia_po_nalad]) {
+                    energie_mozliwe[i].push_back(make_pair(energia_po_nalad, true));
+                    energie_dodane[i][energia_po_nalad] = true;
+                }
+            }
+        }
+    }
+    // szukanie max energii na końcu trasy
+    int max_energia = -1, i_max;
+    for (int i = 0; i < energie_mozliwe[dlg_trasy - 1].size(); ++i) {
+        if (max_energia < energie_mozliwe[dlg_trasy - 1][i].first) {
+            max_energia = energie_mozliwe[dlg_trasy - 1][i].first;
+            i_max = i;
+        }
+    }
+    if (max_energia != -1)
+        znajdz_miejsca_ladowania(max_energia, i_max, energie_mozliwe);
+
+    return max_energia;
 }
 
 bool znajdz_najkrotsza_trase() {
 
-    queue<int> que;
-    que.push(1);
+    queue<int> sasiednie_skrzyzowania;
+    sasiednie_skrzyzowania.push(1);
 
-    vector<bool> visited(n + 1, false);
-    visited[1] = true;
+    vector<bool> odwiedzone_skrzyzowania(n + 1, false);
+    odwiedzone_skrzyzowania[1] = true;
 
-    poprz.resize(n + 1, 0);
+    poprzednie_skrzyzowania.resize(n + 1, 0);
 
-    while (!que.empty()) {
+    // szukanie jakiejkolwiek najkrotszej trasy za pomocą bfs
+    // zlozonosc czasowa: O(n + m)
+    while (!sasiednie_skrzyzowania.empty()) {
+        auto skrzyzowanie = sasiednie_skrzyzowania.front();
+        sasiednie_skrzyzowania.pop();
 
-        auto skrz = que.front();
-
-        que.pop();
-
-        for (auto sasiad : drogi[skrz]) {
-
-            if (!visited[sasiad]) {
-
-                poprz[sasiad] = skrz;
+        for (auto sasiad : drogi[skrzyzowanie]) {
+            if (!odwiedzone_skrzyzowania[sasiad]) {
+                poprzednie_skrzyzowania[sasiad] = skrzyzowanie;
                 if (sasiad == n)
                     return true;
-                que.push(sasiad);
-                visited[sasiad] = true;
+                sasiednie_skrzyzowania.push(sasiad);
+                odwiedzone_skrzyzowania[sasiad] = true;
             }
         }
     }
@@ -152,105 +123,60 @@ bool znajdz_najkrotsza_trase() {
 }
 
 void odbuduj_trase() {
-
-    for (int skrz = n; skrz != 0; skrz = poprz[skrz])
-        trasa.push_back(skrz);
-    poprz.clear();
+    
+    for (int skrzyzowanie = n; skrzyzowanie != 0; skrzyzowanie = poprzednie_skrzyzowania[skrzyzowanie])
+        trasa.push_back(skrzyzowanie);
+    
     reverse(trasa.begin(), trasa.end());
-
-    if (trasa.empty())
-        trasa = {-1};
-    else if (trasa[0] != 1)
-        trasa = {-1};
-    /*
-    else if (trasa[0] != 1) {
-        trasa.clear();
-        trasa = {-2};
-    } */
 }
-/*
-void bfs() {
 
-    //vector<int> poprz = znajdz_najkrotsza_trase();
-    znajdz_najkrotsza_trase();
-    odbuduj_trase();
-}
-*/
 int main() {
 
     std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    std::cin.tie(NULL);
 
-    cin >> poj;
+    cin >> pojemnosc;
     cin >> koszt;
     cin >> l_zw;
 
     for (int i = 0; i < l_zw; i++) {
         int temp;
         cin >> temp;
-        zw.insert(temp);
+        zabronione_wart.insert(temp);
     }
 
     cin >> n;
-    cin >> l_drog;
-    drogi.resize(l_drog + 1);
+    cin >> m;
+    drogi.resize(n + 1);
 
-    for (int i = 0; i < l_drog; i++) {
-        int droga1, droga2;
-        cin >> droga1;
-        cin >> droga2;
-        drogi[droga1].push_back(droga2);
-        drogi[droga2].push_back(droga1);
+    for (int i = 0; i < m; i++) {
+        int skrzyzowanie1, skrzyzowanie2;
+        cin >> skrzyzowanie1;
+        cin >> skrzyzowanie2;
+        drogi[skrzyzowanie1].push_back(skrzyzowanie2);
+        drogi[skrzyzowanie2].push_back(skrzyzowanie1);
     }
-    energie.resize(n);
+    powerbanki.resize(n);
 
     for (int i = 0; i < n; i++)
-        cin >> energie[i];
-    //cout << "essunia zaraz bfsik lecimy\n";
+        cin >> powerbanki[i];
 
     if (!znajdz_najkrotsza_trase()) {
         cout << -1 << '\n';
         return 0;
-    } else {
-/*
-    if (trasa[0] == -1)
-        cout << "trasa pusta\n";
-    else if (trasa[0] == -2)
-        cout << "nie dotarto do konca\n";
+    }
     else {
-    */
-    odbuduj_trase();
-        // jezeli nie da sie dotrzec
-        if (trasa[0] == -1) {
-            cout << -1 << '\n';
-            return 0;
+        odbuduj_trase();
+        dlg_trasy = (int) trasa.size();
+        int max_energia = znajdz_max_energie();
+        
+        // wyśjcie
+        if (max_energia == -1) {
+            cout << max_energia << '\n';
         }
-        dlg_trasy = static_cast<int>(trasa.size());
-        /*
-        for (auto skrz : trasa)
-            cout << skrz;
+        else {
 
-        cout << '\n';
-
-        int max_energ = lala(trasa);
-
-        cout << "max energ: " << max_energ << '\n';
-
-        cout << "miejsca ladowania: ";
-
-        for (auto i : miejsca_ladowania)
-            cout << i << ' ';
-
-        cout << '\n';
-        */
-        // wyjscie
-        //print_vector(trasa);
-        int max_energ = lala();
-
-        if (max_energ == -1) {
-            cout << max_energ << '\n';
-        } else {
-            cout << dlg_trasy << ' ' << max_energ << ' ' << miejsca_ladowania.size() << '\n';
+            cout << dlg_trasy << ' ' << max_energia << ' ' << miejsca_ladowania.size() << '\n';
 
             for (int i = 0; i < dlg_trasy - 1; i++) {
                 cout << trasa[i] << ' ';
@@ -261,7 +187,7 @@ int main() {
                 cout << skrz << ' ';
             cout << '\n';
         }
-
         return 0;
+        // ostateczna zlozonosc: O(n * p) + O(n * p) + O(n + m) + O(n) = O(n * p + m)
     }
 }
