@@ -1,17 +1,13 @@
 Zadanie zaliczeniowe 1: Weh
 Wojciech Kuzebski <wk429552>
 Omoówienie rozwiązania
-dzien dobry ja nazywam sie wojciech kuzebski
-a to jest prezentacja mojego rozwiazania pierwszego zadania zaliczeniowego
-z laboratorium ASD
 Etapy:
-    • wczytanie danych wejściowych {
+    • wczytanie danych wejściowych
         graf, który tworzy mapa miasteczka jest przechowywany w liście sąsiedztwa
         zaimplementowanej za pomocą wektora, w którym na i-tej pozycji znajduje się
         wektor skrzyżowań, takich że pomiędzy i-tym skrzyżowaniem a tym skrzyżowaniem jest bezpośrednia droga.
-    }
-    nastepny etap to
-    • wyznaczenie (o ile taka istnieje) jakiejkolwiek najkrótszej trasy bez uwzględnienia energii : {
+    
+    • wyznaczenie (o ile taka istnieje) jakiejkolwiek najkrótszej trasy bez uwzględnienia energii :
         odbywa się to za sprawą funkcji znajdz_najkrotsza_trase, która za pomocą
         algorytmu bfs, który jak wiadomo dla grafu jaki tworzy miasteczko, przechowywanego
         w liście sąsiedztwa w najgorszym przypadku działa
@@ -20,7 +16,7 @@ Etapy:
         1 i n, funkcja zwraca false a następnie program wypisuje -1 i kończy się. W przeciwnym przypadku
         wywoływana jest funkcja odbuduj_trase, która w czasie liniowym względem długości najkrótszej scieżki
         zapisuje ją w wektorze trasa.
-    } kolejnym etapem jest
+    
     • wyznaczenie maksymalnej energii na końcu trasy {
         co dzieje się w funkcji znajdz_max_energie.
         W najgorszym przypadku gdy każda wartość energii z przedziału
@@ -34,12 +30,10 @@ Etapy:
         , która wykorzystując utworzoną tablicę możliwych wartości energii na danym skrzyżowaniu,
         'idzie' od końca trasy do jej początku dodając na początek listy miejsca_ladowania
         numery skrzyżowań, na których akumulator był ładowany.
-    } przedostatnim etapem jest
+    
     • wyznaczenie skrzyżowań, na których należy ładować akumulator
         jeśli maksymalna wartość energii istnieje, wywoływana jest funkcja znajdz_miejsca_ladowania
         , która wykorzystując utworzoną tablicę możliwych wartości energii na danym skrzyżowaniu,
         'idzie' od końca trasy do jej początku dodając na początek listy miejsca_ladowania
         numery skrzyżowań, na których akumulator był ładowany.
-    • ostatnim etapem rozwiązania jest oczywiście wypisywanie danych wyjściowych
-    Podsumowując bior
-    Dziękuję za uwagę
+        
